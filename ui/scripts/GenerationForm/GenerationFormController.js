@@ -117,7 +117,7 @@ var generationFormController = (function() {
 				{
 					bind: 'github_api_password',
 					name: 'github.api.password',
-					type: 'text', // password throws error: c.jqx.PasswordInput is not a function
+					type: 'password',
 					label: 'github.api.password',
 					labelAlign: 'right',
 					labelWidth: '325px',

@@ -76,10 +76,10 @@ EOT;
     $canvas = <<<EOT
         <x3d id="x3dElement" showConsole="true">
 			<scene id="scene">
-								
+
 				<Transform id="addedElements"></Transform>
-				
-				<MultiPart id="multiPart" mapDEFToID="true" url="$multipartX3dUrl" urlIDMap="$multipartJsonUrl"></MultiPart>							
+
+				<MultiPart id="multiPart" mapDEFToID="true" url="$multipartX3dUrl" urlIDMap="$multipartJsonUrl"></MultiPart>
 
 			</scene>
 		</x3d>
@@ -132,6 +132,7 @@ EOT;
 <script type="text/javascript" src="node_modules/jqwidgets-scripts/jqwidgets/jqxslider.js"></script>
 <script type="text/javascript" src="node_modules/jqwidgets-scripts/jqwidgets/jqxnumberinput.js"></script>
 <script type="text/javascript" src="node_modules/jqwidgets-scripts/jqwidgets/jqxform.js"></script>
+<script type="text/javascript" src="node_modules/jqwidgets-scripts/jqwidgets/jqxpasswordinput.js"></script>
 <script type="text/javascript" src="node_modules/jqwidgets-scripts/jqwidgets/jqxvalidator.js"></script>
 <script type="text/javascript" src="node_modules/prismjs/prism.js"></script>
 <script type="text/javascript" src="node_modules/prismjs/components/prism-java.js"></script>
