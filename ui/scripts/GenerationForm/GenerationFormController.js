@@ -73,10 +73,10 @@ var generationFormController = (function() {
 				},
 				//GitHub-Issues options
 				{
-					bind: 'ghi_plugin',
-					name: 'ghi.plugin',
+					bind: 'extract_github_issues',
+					name: 'extract.github.issues',
 					type: 'option',
-					label: 'ghi.plugin',
+					label: 'extract.github.issues',
 					labelAlign: 'right',
 					labelWidth: '325px',
 					width: '200px',
@@ -93,10 +93,10 @@ var generationFormController = (function() {
 					rowHeight: '25px'
 				},
 				{
-					bind: 'ghrepo_url',
-					name: 'ghrepo.url',
+					bind: 'github_repo_url',
+					name: 'github.repo.url',
 					type: 'text',
-					label: 'ghrepo.url',
+					label: 'github.repo.url',
 					labelAlign: 'right',
 					labelWidth: '325px',
 					width: '200px',
@@ -104,10 +104,10 @@ var generationFormController = (function() {
 					padding: {left: 8, top: 0, bottom: 0, right: 8}
 				},
 				{
-					bind: 'ghapi_user',
-					name: 'ghapi.user',
+					bind: 'github_api_user',
+					name: 'github.api.user',
 					type: 'text',
-					label: 'ghapi.user',
+					label: 'github.api.user',
 					labelAlign: 'right',
 					labelWidth: '325px',
 					width: '200px',
@@ -115,10 +115,10 @@ var generationFormController = (function() {
 					padding: {left: 8, top: 0, bottom: 0, right: 8}
 				},
 				{
-					bind: 'ghapi_pw',
-					name: 'ghapi.pw',
+					bind: 'github_api_password',
+					name: 'github.api.password',
 					type: 'text', // password throws error: c.jqx.PasswordInput is not a function
-					label: 'ghapi.pw',
+					label: 'github.api.password',
 					labelAlign: 'right',
 					labelWidth: '325px',
 					width: '200px',
@@ -933,7 +933,7 @@ var generationFormController = (function() {
 				input_name: 'default',
 				input_files: '',
 				metaphor: 'city',
-				ghi_plugin: 'disabled',
+				extract_github_issues: 'disabled',
 				city_building_type: 'original',
 				city_scheme: 'types',
 				city_class_elements_mode: 'methods_and_attributes',
@@ -1018,10 +1018,10 @@ var generationFormController = (function() {
 				const args = event.args;
 				const newValue = args.value;
 
-				if (newValue.ghi_plugin === 'enabled') {
-					toggle_ghi_plugin_visibility('showComponent');
-				} else if (newValue.ghi_plugin === 'disabled') {
-					toggle_ghi_plugin_visibility('hideComponent');
+				if (newValue.extract_github_issues === 'enabled') {
+					toggle_github_issues_form_visibility('showComponent');
+				} else {
+					toggle_github_issues_form_visibility('hideComponent');
 				}
 
 				// Elements shown/hidden based on choice 'city' vs 'rd'
@@ -1076,7 +1076,7 @@ var generationFormController = (function() {
 			// Manually created vars to validate the data in the form
 			const manual_input_name = settingsForm.jqxForm('getComponentByName', 'input.name');
 			const manual_input_files = settingsForm.jqxForm('getComponentByName', 'input.files');
-			const manual_ghrepo_url = settingsForm.jqxForm('getComponentByName', 'ghrepo.url');
+			const manual_github_repo_url = settingsForm.jqxForm('getComponentByName', 'github.repo.url');
 			const manual_city_package_color_start = settingsForm.jqxForm('getComponentByName', 'city.package.color_start');
 			const manual_city_package_color_end = settingsForm.jqxForm('getComponentByName', 'city.package.color_end');
 			const manual_city_class_color_start = settingsForm.jqxForm('getComponentByName', 'city.class.color_start');
@@ -1106,7 +1106,7 @@ var generationFormController = (function() {
 				rules: [
 					{ input: manual_input_name, message: 'Please enter an input.name!', action: 'keyup', position: 'top:0,15', rule: 'required' },
 					{ input: manual_input_files, message: 'Please enter a valid URL!', action: 'keyup, focus, blur, change', position: 'top:0,15', rule: validate_url },
-					{ input: manual_ghrepo_url, message: 'Please enter a valid URL!', action: 'keyup, focus, blur, change', position: 'top:0,15', rule: validate_url },
+					{ input: manual_github_repo_url, message: 'Please enter a valid URL!', action: 'keyup, focus, blur, change', position: 'top:0,15', rule: validate_url },
 					{ input: manual_city_package_color_start, message: 'Please enter a valid HEX Color!', action: 'keyup, change', position: 'top:0,15', rule: validate_hex},
 					{ input: manual_city_package_color_end, message: 'Please enter a valid HEX Color!', action: 'keyup, change', position: 'top:0,15', rule: validate_hex},
 					{ input: manual_city_class_color_start, message: 'Please enter a valid HEX Color!', action: 'keyup, change', position: 'top:0,15', rule: validate_hex},
@@ -1195,14 +1195,14 @@ var generationFormController = (function() {
 		toggle_city_panels_visibility('hideComponent');
 		toggle_city_bricks_visibility('hideComponent');
 		toggle_rd_visibility('hideComponent');
-		toggle_ghi_plugin_visibility('hideComponent');
+		toggle_github_issues_form_visibility('hideComponent');
 	}
 
 	// Toggle visibility of GitHub-Issue options
-	function toggle_ghi_plugin_visibility(componentVisibility) {
-		settingsForm.jqxForm(componentVisibility, 'ghrepo.url');
-		settingsForm.jqxForm(componentVisibility, 'ghapi.user');
-		settingsForm.jqxForm(componentVisibility, 'ghapi.pw');
+	function toggle_github_issues_form_visibility(componentVisibility) {
+		settingsForm.jqxForm(componentVisibility, 'github.repo.url');
+		settingsForm.jqxForm(componentVisibility, 'github.api.user');
+		settingsForm.jqxForm(componentVisibility, 'github.api.password');
 	}
 	// Toggle visibility of city.scheme && city.class options
 	function toggle_city_class_elements_visibility(componentVisibility) {
