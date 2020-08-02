@@ -73,10 +73,10 @@ var generationFormController = (function() {
 				},
 				//GitHub-Issues options
 				{
-					bind: 'extract_github_issues',
-					name: 'extract.github.issues',
+					bind: 'github_extract_issues',
+					name: 'github.extract.issues',
 					type: 'option',
-					label: 'extract.github.issues',
+					label: 'github.extract.issues',
 					labelAlign: 'right',
 					labelWidth: '325px',
 					width: '200px',
@@ -933,7 +933,7 @@ var generationFormController = (function() {
 				input_name: 'default',
 				input_files: '',
 				metaphor: 'city',
-				extract_github_issues: 'disabled',
+				github_extract_issues: 'disabled',
 				city_building_type: 'original',
 				city_scheme: 'types',
 				city_class_elements_mode: 'methods_and_attributes',
@@ -1018,7 +1018,7 @@ var generationFormController = (function() {
 				const args = event.args;
 				const newValue = args.value;
 
-				if (newValue.extract_github_issues === 'enabled') {
+				if (newValue.github_extract_issues === 'enabled') {
 					toggle_github_issues_form_visibility('showComponent');
 				} else {
 					toggle_github_issues_form_visibility('hideComponent');
