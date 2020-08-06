@@ -12,10 +12,15 @@ import java.util.List;
 public class Importer {
     private static Log log = LogFactory.getLog(Importer.class);
     private ScanStep scanStep;
+    private GitHubIssuesScan gitHubIssuesScan;
     private ArrayList<ProgrammingLanguage> languages = new ArrayList<>();
+    private SettingsConfiguration config;
+    private Runtime runtime = Runtime.getRuntime();
 
     public Importer(SettingsConfiguration config){
         this.scanStep = new ScanStep(config.getInputFiles(), config.isSkipScan());
+        this.gitHubIssuesScan = new GitHubIssuesScan(config);
+        this.config = config;
     }
 
     public Importer(String inputFiles) {
@@ -23,6 +28,8 @@ public class Importer {
     }
 
     public void run() {
+        gitHubIssuesScan.run();
+
         log.info("Import started");
         scanStep.run();
         log.info("Import finished");
@@ -39,6 +46,7 @@ public class Importer {
         }
         return languages;
     }
+
 
     private boolean isC() {
         DatabaseConnector connector = DatabaseConnector.getInstance();

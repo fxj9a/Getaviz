@@ -34,7 +34,7 @@ public class SettingsConfiguration {
 		}
 		loadConfig(path);
 	}
-	
+
 	public static SettingsConfiguration getInstance(HttpServletRequest request) {
 		if (instance == null) {
 			instance = new SettingsConfiguration();
@@ -42,7 +42,7 @@ public class SettingsConfiguration {
 		loadConfig(request);
 		return instance;
 	}
-	
+
 	private static void loadConfig(HttpServletRequest request) {
 		config = new PropertiesConfiguration();
 		Enumeration<String> parameters = request.getParameterNames();
@@ -67,14 +67,23 @@ public class SettingsConfiguration {
 	public boolean isSkipScan() {
 		return config.getBoolean("input.skip_scan", false);
 	}
-	
+
+	public boolean isGHIEnabled() {
+		String gei = config.getString("github.extract.issues");
+		log.info(gei);
+		return gei.equals("enabled");
+  }
+  public String getGHIURL() {
+    return config.getString("github.repo.url");
+  }
+
 	public String getInputFiles() {
 		String[] fileArray = config.getStringArray("input.files");
 		if(fileArray.length == 0) {
 			throw new RuntimeException("There is no specified uri to a jar or war file. Check if in the settings.properties file the field input.files is set to one or more existing uris.");
 		}
 		StringBuilder files = new StringBuilder();
-		
+
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		for(int i = 0; i < fileArray.length; i++) {
 			String path = fileArray[i];
@@ -94,7 +103,7 @@ public class SettingsConfiguration {
 		}
 		return files.toString();
 	}
-	
+
 	public Metaphor getMetaphor() {
 		String metaphor = config.getString("metaphor", "rd");
 		if ("city".equals(metaphor)) {
@@ -102,11 +111,11 @@ public class SettingsConfiguration {
 		}
 		return Metaphor.RD;
 	}
-	
+
 	public String getName() {
 		return config.getString("input.name", "default");
 	}
-	
+
 	public String getOutputPath() {
 		return config.getString("output.path", "/var/lib/jetty/data-gen/") + getName() + "/model/";
 	}
@@ -117,7 +126,7 @@ public class SettingsConfiguration {
 		}
 		return OutputFormat.AFrame;
 	}
-	
+
 	public String getBuildingTypeAsString() {
 		return config.getString("city.building_type", "original");
 	}
@@ -252,7 +261,7 @@ public class SettingsConfiguration {
 				} catch(NumberFormatException e) {
 					return defaultValue;
 				}
-				
+
 			}
 			return value;
 		}
@@ -367,7 +376,7 @@ public class SettingsConfiguration {
 	public String getCityChimneyColor() {
 		return config.getString("city.floor.chimney.color", "#FFFC19");
 	}
-	
+
 	public double getRDDataFactor() {
 		return config.getDouble("rd.data_factor", 4.0);
 	}
@@ -431,17 +440,17 @@ public class SettingsConfiguration {
 	public enum OutputFormat {
 		X3D, AFrame
 	}
-	
+
 	/**
 	 * Sets in which way the Historic Evolution
-	 * of the analyzed Software should be represented, 
-	 * it can either be in a static or dynamic way 
+	 * of the analyzed Software should be represented,
+	 * it can either be in a static or dynamic way
 	 */
-	
+
 	public enum BuildingType {
 		CITY_ORIGINAL, CITY_PANELS, CITY_BRICKS, CITY_FLOOR
 	}
-	
+
 	/**
 	 * Defines how the methods and attributes are sorted and colored in the city
 	 * model.
@@ -464,14 +473,14 @@ public class SettingsConfiguration {
 		 */
 		TYPES
 	}
-	
+
 	/**
 	 * Defines which elements of a class are to show.
 	 */
 	public enum ClassElementsModes {
 		METHODS_ONLY, ATTRIBUTES_ONLY, METHODS_AND_ATTRIBUTES
 	}
-	
+
 	/**
 	 * Defines which how the elements of a class are sorted.
 	 */
@@ -482,7 +491,7 @@ public class SettingsConfiguration {
 	/**
 	 * A list of types of a method with the associated priority value.<br>
 	 * Highest priority/smallest number is placed on the bottom, lowest on top.
-	 * 
+	 *
 	 * @see SortPriorities_Visibility
 	 * @see Methods.SortPriorities_Types
 	 * @see Attributes.SortPriorities_Types
@@ -508,9 +517,9 @@ public class SettingsConfiguration {
 	 * A list of visibility modifiers of a method with the associated priority
 	 * value.<br>
 	 * Highest priority/smallest number is placed on the bottom, lowest on top.
-	 * 
+	 *
 	 * @see ClassElementsSortModesFine
-	 * 
+	 *
 	 */
 	public enum SortPriorities_Visibility {;
 		public static int PRIVATE = 1;
@@ -660,7 +669,7 @@ public class SettingsConfiguration {
 
 		}
 	}
-	
+
 	public enum Original {
 		;
 		public enum BuildingMetric {
@@ -668,7 +677,7 @@ public class SettingsConfiguration {
 			NOS
 		}
 	}
-	
+
 	public enum Metaphor {
 		RD, CITY
 	}
