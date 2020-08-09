@@ -104,6 +104,17 @@ var generationFormController = (function() {
 					padding: {left: 8, top: 0, bottom: 0, right: 8}
 				},
 				{
+					bind: 'github_repo_branch',
+					name: 'github.repo.branch',
+					type: 'text',
+					label: 'github.repo.branch',
+					labelAlign: 'right',
+					labelWidth: '325px',
+					width: '200px',
+          info: 'refs/heads/<branch> or refs/tags/<tag> - branch or tag of GitHub repository corresponding to input.file',
+					padding: {left: 8, top: 0, bottom: 0, right: 8}
+				},
+				{
 					bind: 'github_api_user',
 					name: 'github.api.user',
 					type: 'text',
@@ -934,6 +945,7 @@ var generationFormController = (function() {
 				input_files: '',
 				metaphor: 'city',
 				github_extract_issues: 'disabled',
+        github_repo_branch: 'refs/heads/master',
 				city_building_type: 'original',
 				city_scheme: 'types',
 				city_class_elements_mode: 'methods_and_attributes',
@@ -1201,6 +1213,7 @@ var generationFormController = (function() {
 	// Toggle visibility of GitHub-Issue options
 	function toggle_github_issues_form_visibility(componentVisibility) {
 		settingsForm.jqxForm(componentVisibility, 'github.repo.url');
+    settingsForm.jqxForm(componentVisibility, 'github.repo.branch');
 		settingsForm.jqxForm(componentVisibility, 'github.api.user');
 		settingsForm.jqxForm(componentVisibility, 'github.api.password');
 	}

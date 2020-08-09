@@ -8,6 +8,7 @@ $payload = array(
   'metaphor'                        => $_REQUEST['metaphor'],
   'github.extract.issues'           => $_REQUEST['github_extract_issues'],
   'github.repo.url'                 => $_REQUEST['github_repo_url'],
+  'github.repo.branch'                 => $_REQUEST['github_repo_branch'],
   'github.api.user'                 => $_REQUEST['github_api_user'],
   'github.api.password'             => $_REQUEST['github_api_password'],
   'city.building_type'              => $_REQUEST['city_building_type'],
