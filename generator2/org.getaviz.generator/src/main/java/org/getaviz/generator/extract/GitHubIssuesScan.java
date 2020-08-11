@@ -31,11 +31,7 @@ public class GitHubIssuesScan implements Step {
   }
 
   @Override
-  public void run(){
-    System.out.println("Feature not implemented");
-  }
-
-  public SettingsConfiguration runNow() {
+  public void run() {
     if(checkRequirements()) {
       try {
         Collection<String> branches = new HashSet();
@@ -78,11 +74,14 @@ public class GitHubIssuesScan implements Step {
         fw.close();
 
         config.addInputFile(localRepoPath.getAbsolutePath());
-        return config;
+        this.config = config;
       } catch (Exception e) { // TODO: replace generic throwable
         System.out.println(e);
       }
     }
-    return null;
+  }
+
+  public SettingsConfiguration getConfig(){
+    return config;
   }
 }

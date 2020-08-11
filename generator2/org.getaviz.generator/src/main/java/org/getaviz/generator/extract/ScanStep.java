@@ -15,6 +15,7 @@ class ScanStep implements Step {
     private Log log = LogFactory.getLog(this.getClass());
     private Runtime runtime = Runtime.getRuntime();
     private String inputFiles;
+    private SettingsConfiguration config;
     private String pathJQAssistant = "/opt/jqassistant/bin/jqassistant.sh";
     private boolean skipScan;
 
@@ -27,7 +28,7 @@ class ScanStep implements Step {
         return !skipScan;
     }
 
-    public void run(SettingsConfiguration config){
+    public void run(){
         if (config != null) {
             //updated inputFiles
             inputFiles = config.getInputFiles();
@@ -52,8 +53,8 @@ class ScanStep implements Step {
 
 
     }
-    public void run() {
-        run(null);
+    public void setConfig(SettingsConfiguration config){
+        this.config = config;
     }
 
     void setPathJQAssistant(String path) {
