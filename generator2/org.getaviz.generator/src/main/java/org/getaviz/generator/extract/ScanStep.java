@@ -2,9 +2,13 @@ package org.getaviz.generator.extract;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.getaviz.generator.SettingsConfiguration;
 import org.getaviz.generator.Step;
 import org.getaviz.generator.database.DatabaseConnector;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 class ScanStep implements Step {
 
@@ -23,13 +27,19 @@ class ScanStep implements Step {
         return !skipScan;
     }
 
-    public void run() {
+    public void run(SettingsConfiguration config){
+        if (config != null) {
+            //updated inputFiles
+            inputFiles = config.getInputFiles();
+        }
         if(checkRequirements()) {
             log.info("jQAssistant scan started.");
             log.info("Scanning from URI(s) " + inputFiles);
             try {
                 String options = "scan -reset -u " + inputFiles + " -storeUri " +  DatabaseConnector.getDatabaseURL();
+                System.out.println("SCAN OPTIONS: " + options);
                 Process pScan = runtime.exec(pathJQAssistant + " " + options);
+
                 pScan.waitFor();
             } catch (IOException | InterruptedException e) {
                 log.error(e);
@@ -39,6 +49,11 @@ class ScanStep implements Step {
         } else {
             log.info("Requirements for step not fulfilled");
         }
+
+
+    }
+    public void run() {
+        run(null);
     }
 
     void setPathJQAssistant(String path) {

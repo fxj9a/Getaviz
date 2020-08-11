@@ -3,9 +3,11 @@ package org.getaviz.generator;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -69,39 +71,65 @@ public class SettingsConfiguration {
 	}
 
 	public boolean isGHIEnabled() {
-		String gei = config.getString("github.extract.issues");
-		log.info(gei);
-		return gei.equals("enabled");
+		return config.getString("github.extract.issues", "disabled").equals("enabled");
   }
+
+  public void addInputFile(String input) {
+		String[] inputFiles = config.getStringArray("input.files");
+
+		for (String x: inputFiles){
+			System.out.println(x);
+		}
+		// new array, increment size
+		String[] newInputFiles = new String[inputFiles.length + 1];
+		// copy old array
+		System.arraycopy(inputFiles, 0, newInputFiles, 0, inputFiles.length);
+		newInputFiles[newInputFiles.length-1] = input;
+		for (String x: newInputFiles){
+			System.out.println(x);
+		}
+		config.setProperty("input.files", newInputFiles);
+	}
   public String getGHIURL() {
     return config.getString("github.repo.url");
   }
+	public String getGHIBranch(){
+		return config.getString("github.repo.branch", "refs/heads/master");
+	}
+	public String getGitHubUser(){
+		return config.getString("github.api.user");
+	 }
+	 public String getGitHubPassword(){
+		 return config.getString("github.api.password");
+	 }
 
 	public String getInputFiles() {
 		String[] fileArray = config.getStringArray("input.files");
-		if(fileArray.length == 0) {
+		if((isGHIEnabled() && fileArray.length < 1) || (!isGHIEnabled() && fileArray.length == 0)) {
+			System.out.println("GHI is " + isGHIEnabled() + "\nFileArray size is " + fileArray.length);
 			throw new RuntimeException("There is no specified uri to a jar or war file. Check if in the settings.properties file the field input.files is set to one or more existing uris.");
 		}
+		// -u files (jar packages)
 		StringBuilder files = new StringBuilder();
+		// -f directories (for Git repo scan)
+		StringBuilder directories = new StringBuilder();
 
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		for(int i = 0; i < fileArray.length; i++) {
 			String path = fileArray[i];
-			if(!path.startsWith("http") && !path.startsWith("https") && !path.startsWith("file")) {
-				path = "file:" + Objects.requireNonNull(classLoader.getResource(path)).getPath();
-				try {
-					path = URLDecoder.decode(path, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+			if(!path.startsWith("http") && !path.startsWith("file")) {
+			  directories.append(path + " ");
+			} else {
+				if (files.length() != 0) {
+					files.append(",");
 				}
-				//path = path.replace(" ", "\\ ");
-			}
-			files.append(path);
-			if(i < fileArray.length - 1) {
-				files.append(",");
+				files.append(path);
 			}
 		}
-		return files.toString();
+		if(directories.length() != 0) {
+			directories.insert(0, " -f ");
+		}
+		return files.toString() + directories.toString();
 	}
 
 	public Metaphor getMetaphor() {

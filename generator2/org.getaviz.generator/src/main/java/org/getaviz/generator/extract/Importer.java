@@ -28,10 +28,10 @@ public class Importer {
     }
 
     public void run() {
-        gitHubIssuesScan.run();
+        SettingsConfiguration myconfig = gitHubIssuesScan.runNow();
 
         log.info("Import started");
-        scanStep.run();
+        scanStep.run(myconfig);
         log.info("Import finished");
     }
 

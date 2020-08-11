@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.*;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,26 +31,58 @@ public class GitHubIssuesScan implements Step {
   }
 
   @Override
-  public void run() {
-    try {
-      Collection<String> branches = new HashSet();
-      branches.add("refs/heads/" + "master");
+  public void run(){
+    System.out.println("Feature not implemented");
+  }
 
-      File localRepoPath = new File("gitrepo");
-      System.out.println("Cleaning Target directory");
+  public SettingsConfiguration runNow() {
+    if(checkRequirements()) {
+      try {
+        Collection<String> branches = new HashSet();
+        branches.add(config.getGHIBranch());
 
-      FileUtils.deleteDirectory(localRepoPath);
+        File localRepoPath = new File("gitrepo");
+        System.out.println("Cleaning Target directory");
 
-      System.out.println("Cloning Git reposotory to "+localRepoPath.getAbsolutePath());
+        FileUtils.deleteDirectory(localRepoPath);
 
-      Git git = Git.cloneRepository()
-          .setURI(config.getGHIURL())
-          .setDirectory(localRepoPath)
-          .setBranchesToClone(branches)
-          .call();
-    } catch (Exception e){ // TOOD: replace generic Exception catcher
-      System.out.println(e);
+        System.out.println("Cloning Git reposotory to " + localRepoPath.getAbsolutePath());
+
+        Git git = Git.cloneRepository()
+            .setURI(config.getGHIURL())
+            .setDirectory(localRepoPath)
+            .call();
+        git.checkout().setName(config.getGHIBranch()).call();
+
+        File gitHubConfig = new File("gitrepo/githubissues.xml");
+        FileWriter fw = new FileWriter("gitrepo/githubissues.xml");
+        gitHubConfig.createNewFile();
+
+        String gitHubRepoURL = config.getGHIURL(); //
+        // replaceFirst-regex https? matches both http and https (although github always uses https)
+        gitHubRepoURL = gitHubRepoURL.replaceFirst("https?://github.com/", "").replace(".git","");
+        String[] gitHubRepoInfo = gitHubRepoURL.split("/");
+
+        String gitHubIssuesPluginConfig = "<github-issues-configuration>\n" +
+            "    <github-repository>\n" +
+            "        <user>" + gitHubRepoInfo[0] + "</user>\n" +
+            "        <name>" + gitHubRepoInfo[1] + "</name>\n" +
+            "        <credentials>\n" +
+            "            <user>" + config.getGitHubUser() + "</user>\n" +
+            "            <password>" + config.getGitHubPassword()+ "</password>\n" +
+            "        </credentials>\n" +
+            "    </github-repository>\n" +
+            "</github-issues-configuration>\n";
+
+        fw.write(gitHubIssuesPluginConfig);
+        fw.close();
+
+        config.addInputFile(localRepoPath.getAbsolutePath());
+        return config;
+      } catch (Exception e) { // TODO: replace generic throwable
+        System.out.println(e);
+      }
     }
-
+    return null;
   }
 }
