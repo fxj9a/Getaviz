@@ -41,7 +41,7 @@ class ScanStep implements Step {
             log.info("Scanning from URI(s) " + inputFiles);
             String line;
             try {
-                String options = "scan -reset -u " + inputFiles + " -storeUri " + DatabaseConnector.getDatabaseURL();
+                String options = "scan -u " + inputFiles + " -storeUri " + DatabaseConnector.getDatabaseURL();
                 System.out.println("SCAN OPTIONS: " + options);
                 Process pScan = runtime.exec(pathJQAssistant + " " + options);
 
