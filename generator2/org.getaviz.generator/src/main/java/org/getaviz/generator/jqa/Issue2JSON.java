@@ -46,7 +46,7 @@ public class Issue2JSON implements Step {
 
       Writer fw = null;
       try {
-        String path = config.getOutputPath() + "metaData.json";
+        String path = config.getOutputPath() + "ghIssues.json";
         fw = new FileWriter(path);
         fw.write(toJSON(elements));
       } catch (IOException e) {
@@ -75,43 +75,43 @@ public class Issue2JSON implements Step {
         builder.append("\n},{");
       }
       if (el.hasLabel(Labels.GitHub.name()) && el.hasLabel((Labels.Repository.name()))) {
-        builder.append(toMetaGitHubRepo(el));
+        builder.append(toJsonGitHubRepo(el));
         builder.append("\n");
       }
       if (el.hasLabel(Labels.Git.name()) && el.hasLabel((Labels.Repository.name()))) {
-        builder.append(toMetaGitRepo(el));
+        builder.append(toJsonGitRepo(el));
         builder.append("\n");
       }
       if (el.hasLabel(Labels.GitHub.name()) && el.hasLabel((Labels.Issue.name()))) {
-        builder.append(toMetaIssue(el));
+        builder.append(toJsonIssue(el));
         builder.append("\n");
       }
       if (el.hasLabel(Labels.GitHub.name()) && el.hasLabel((Labels.PullRequest.name()))) {
-        builder.append(toMetaPR(el));
+        builder.append(toJsonPR(el));
         builder.append("\n");
       }
       if (el.hasLabel(Labels.GitHub.name()) && el.hasLabel((Labels.Comment.name()))) {
-        builder.append(toMetaComment(el));
+        builder.append(toJsonComment(el));
         builder.append("\n");
       }
       if ((el.hasLabel(Labels.GitHub.name()) && el.hasLabel(Labels.Commit.name()))) {
-        builder.append(toMetaGitHubCommit(el));
+        builder.append(toJsonGitHubCommit(el));
         builder.append("\n");
       }
       if ((el.hasLabel(Labels.Git.name()) && el.hasLabel(Labels.Commit.name()))) {
-        builder.append(toMetaGitCommit(el));
+        builder.append(toJsonGitCommit(el));
         builder.append("\n");
       }
       if ((el.hasLabel(Labels.Git.name()) && el.hasLabel(Labels.Change.name()))) {
-        builder.append(toMetaGitChange(el));
+        builder.append(toJsonGitChange(el));
         builder.append("\n");
       }
       if ((el.hasLabel(Labels.Git.name()) && el.hasLabel(Labels.File.name()))) {
-        builder.append(toMetaGitFile(el));
+        builder.append(toJsonGitFile(el));
         builder.append("\n");
       }
       if ((el.hasLabel(Labels.Git.name()) && el.hasLabel(Labels.Author.name()))) {
-        builder.append(toMetaGitAuthor(el));
+        builder.append(toJsonGitAuthor(el));
         builder.append("\n");
       }
 
@@ -123,16 +123,16 @@ public class Issue2JSON implements Step {
     return builder.toString();
   }
 
-  private String toMetaGitHubRepo(Node repository) {
+  private String toJsonGitHubRepo(Node repository) {
     return formatLine("repositoryId", repository.get("repositoryId").asString()) +
         formatLine("name", repository.get("name").asString()) +
-        formatLine("user", repository.get("user").asString());
+        formatEndline("user", repository.get("user").asString());
   }
 
-  private String toMetaGitRepo(Node repository) {
+  private String toJsonGitRepo(Node repository) {
     return ""; // doesn't have any attributes
   }
-  private String toMetaIssue(Node issue) {
+  private String toJsonIssue(Node issue) {
     return formatLine("issueId", issue.get("issueId").asString()) +
         formatLine("title", issue.get("title").asString()) +
         formatLine("state", issue.get("state").asString()) +
@@ -140,10 +140,10 @@ public class Issue2JSON implements Step {
         formatLine("updatedAt", issue.get("updatedAt").asString()) +
         formatLine("number", issue.get("number").asString()) +
         formatLine("locked", issue.get("locked").asString()) +
-        formatLine("body", issue.get("body").asString());
+        formatEndline("body", issue.get("body").asString());
 
   }
-  private String toMetaPR(Node pr) {
+  private String toJsonPR(Node pr) {
     return formatLine("issueId", pr.get("issueId").asString()) +
         formatLine("title", pr.get("title").asString()) +
         formatLine("state", pr.get("state").asString()) +
@@ -151,20 +151,20 @@ public class Issue2JSON implements Step {
         formatLine("updatedAt", pr.get("updatedAt").asString()) +
         formatLine("number", pr.get("number").asString()) +
         formatLine("locked", pr.get("locked").asString()) +
-        formatLine("body", pr.get("body").asString());
+        formatEndline("body", pr.get("body").asString());
   }
-  private String toMetaComment(Node comment) {
+  private String toJsonComment(Node comment) {
     return formatLine("createdAt", comment.get("createdAt").asString()) +
         formatLine("updatedAt", comment.get("updatedAt").asString()) +
         formatLine("number", comment.get("number").asString()) +
-        formatLine("body", comment.get("body").asString());
+        formatEndline("body", comment.get("body").asString());
   }
-  private String toMetaGitHubCommit(Node c) {
+  private String toJsonGitHubCommit(Node c) {
     return formatLine("sha", c.get("sha").asString()) +
         formatEndline("id", c.get("id").asString());
     // TODO: put formatEndline at end of all returns
   }
-  private String toMetaGitCommit(Node c) {
+  private String toJsonGitCommit(Node c) {
     return formatLine("sha", c.get("sha").asString()) +
         formatLine("author", c.get("author").asString()) +
         formatLine("committer", c.get("committer").asString()) +
@@ -175,10 +175,10 @@ public class Issue2JSON implements Step {
         formatEndline("shortMessage", c.get("shortMessage").asString());
 
   }
-  private String toMetaGitChange(Node c) {
+  private String toJsonGitChange(Node c) {
     return formatEndline("modificationKind", c.get("modificationKind").asString());
   }
-  private String toMetaGitFile(Node f) {
+  private String toJsonGitFile(Node f) {
     return formatLine("relativePath", f.get("relativePath").asString()) +
         formatLine("createdAt", f.get("createdAt").asString()) +
         formatLine("changedAt", f.get("changedAt").asString()) +
@@ -189,7 +189,7 @@ public class Issue2JSON implements Step {
         formatEndline("lastModificationAt", f.get("lastModificationAt").asString());
   }
 
-  private String toMetaGitAuthor(Node a) {
+  private String toJsonGitAuthor(Node a) {
     return formatLine("identString", a.get("identString").asString()) +
         formatLine("name", a.get("name").asString()) +
         formatEndline("email", a.get("email").asString());
