@@ -109,27 +109,40 @@ public class SettingsConfiguration {
 			System.out.println("GHI is " + isGHIEnabled() + "\nFileArray size is " + fileArray.length);
 			throw new RuntimeException("There is no specified uri to a jar or war file. Check if in the settings.properties file the field input.files is set to one or more existing uris.");
 		}
-		// -u files (jar packages)
+
+		// jqassistant scan -u
 		StringBuilder files = new StringBuilder();
-		// -f directories (for Git repo scan)
-		StringBuilder directories = new StringBuilder();
 
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		for(int i = 0; i < fileArray.length; i++) {
 			String path = fileArray[i];
-			if(!path.startsWith("http") && !path.startsWith("file")) {
-			  directories.append(path + " ");
-			} else {
+			if(path.startsWith("http") || path.startsWith("file")) {
 				if (files.length() != 0) {
 					files.append(",");
 				}
 				files.append(path);
 			}
 		}
-		if(directories.length() != 0) {
-			directories.insert(0, " -f ");
+		return files.toString();
+	}
+
+	public String getInputDirectories() {
+		String[] fileArray = config.getStringArray("input.files");
+		if((isGHIEnabled() && fileArray.length < 1) || (!isGHIEnabled() && fileArray.length == 0)) {
+			System.out.println("GHI is " + isGHIEnabled() + "\nFileArray size is " + fileArray.length);
+			throw new RuntimeException("There is no specified uri to a jar or war file. Check if in the settings.properties file the field input.files is set to one or more existing uris.");
 		}
-		return files.toString() + directories.toString();
+		// -f directories
+		StringBuilder directories = new StringBuilder();
+
+		ClassLoader classLoader = this.getClass().getClassLoader();
+		for(int i = 0; i < fileArray.length; i++) {
+			String path = fileArray[i];
+			if(!path.startsWith("http") && !path.startsWith("file")) {
+				directories.append(path + " ");
+			}
+		}
+		return directories.toString();
 	}
 
 	public Metaphor getMetaphor() {

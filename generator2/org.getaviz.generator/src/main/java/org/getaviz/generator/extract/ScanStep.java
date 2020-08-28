@@ -29,19 +29,32 @@ class ScanStep implements Step {
     }
 
     public void run(){
+        boolean gitHubIssuesStep = false;
         if (config != null) {
             //updated inputFiles
             inputFiles = config.getInputFiles();
+            gitHubIssuesStep = config.isGHIEnabled();
         }
+
         if(checkRequirements()) {
             log.info("jQAssistant scan started.");
             log.info("Scanning from URI(s) " + inputFiles);
+            String line;
             try {
-                String options = "scan -reset -u " + inputFiles + " -storeUri " +  DatabaseConnector.getDatabaseURL();
+                String options = "scan -reset -u " + inputFiles + " -storeUri " + DatabaseConnector.getDatabaseURL();
                 System.out.println("SCAN OPTIONS: " + options);
                 Process pScan = runtime.exec(pathJQAssistant + " " + options);
 
                 pScan.waitFor();
+                System.out.println("Scan exit value: " + pScan.exitValue());
+
+                if (gitHubIssuesStep) {
+                    options = "scan -f " + config.getInputDirectories() + " -storeUri " + DatabaseConnector.getDatabaseURL();
+                    System.out.println("SCAN OPTIONS: " + options);
+                    Process pDirScan = runtime.exec(pathJQAssistant + " " + options);
+                    pDirScan.waitFor();
+                    System.out.println("Scan exit value: " + pDirScan.exitValue());
+                }
             } catch (IOException | InterruptedException e) {
                 log.error(e);
                 e.printStackTrace();
