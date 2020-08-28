@@ -16,6 +16,7 @@ public class CityMetaphor implements Metaphor {
         steps.add(factory.createMetadataFileStep());
         steps.add(factory.createStepm2m());
         steps.add(factory.createStepm2t());
+        steps.add(factory.createStepi());
     }
 
     public void generate() {

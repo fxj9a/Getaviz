@@ -70,4 +70,10 @@ public class StepFactory {
             }
         }
     }
+    public Step createStepi() {
+        if (metaphor == SettingsConfiguration.Metaphor.CITY) {
+            return new Issue2JSON(config);
+        }
+        else { return null;}
+    }
 }
